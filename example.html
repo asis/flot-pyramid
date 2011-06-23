@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Pyramid example</title>
+    <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../excanvas.min.js"></script><![endif]-->
+    <script language="javascript" type="text/javascript" src="lib/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="lib/flot/jquery.flot.js"></script>
+    <script type="text/javascript" language="javascript" src="src/jquery.flot.pyramid.js"> </script>
+ </head>
+    <body>
+    <h1>Pyramid example</h1>
+    <div id="pyramid" style="width:600px;height:300px;"></div>
+    <script id="source">
+
+$(function () {
+
+    var pseries = [
+      {
+        label: 'H',
+        data: [ ['0-4',1302329], ['5-9',2328460], ['10-14',1090872], ['15-19',1158983], ['20-24',1339972], ['25-29',1667557], ['30-34',2072016], ['35-39',2117802], ['40-44',1945472], ['45-49',1746832], ['50-54',1521581], ['55-59',1282107], ['60-64',1173175], ['65-69',990405], ['70-74',800274], ['75-79',732383], ['80-84',477597], ['85-89',241915], ['90-94',69987], ['95-99',15332], ['100+',2060] ]
+      },
+      {
+        label: 'M',
+        data: [ ['0-4',1224757], ['5-9',1129454], ['10-14',1030163], ['15-19',1084773], ['20-24',1220879], ['25-29',1527463], ['30-34',1960767], ['35-39',2043411], ['40-44',1904849], ['45-49',1747880], ['50-54',1551797], ['55-59',1330712], ['60-64',1262386], ['65-69',1107169], ['70-74',980444], ['75-79',994168], ['80-84',764408], ['85-89',475115], ['90-94',171929], ['95-99', 40284], ['100+',5498] ],
+        pyramid: {
+          direction: 'L'
+        }
+      }
+    ];
+
+    $.plot($('#pyramid'), pseries, {
+        series: {
+          pyramid: {
+            show: true
+          },
+        },
+        xaxis: {
+          tickFormatter: function(v) {
+            return (v / 1000).toString() + "K";
+          }
+        }
+    });
+});
+</script>
+
+ </body>
+</html>
