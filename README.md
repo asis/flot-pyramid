@@ -75,19 +75,21 @@ In order to draw a population pyramid chart, call `plot` with the following conf
 
 #### Number of series
 
-Currently, you can only plot two series in the same graph. Plotting more than two series has not even been tested :P
+Currently, you can only plot two data series in the same graph. Plotting more than two series has not even been tested :P
 
 #### Data groups labeling
 
-You can use textual labels representing each of the groups the data is split on, providing an array of `label`, `value` pairs as the series data (see example below).
+You can use textual labels representing each of the groups the data is split in, providing an array of `label`, `value` pairs as the series data (see example below).
 
 #### Bars direction
 
-The plotting direction can be specified for each series. You can use `L` or `W` for left and `R` or `E` for right (right is the default when you do not specify a direction).
+The plotting direction can be specified for each series. You can use `L`
+or `W` for left (the "negative part of the X axis) and `R` or `E` for
+right (the positive part. This is the default when you do not specify a direction).
 
 #### Series configuration example
 
-This is an example series configuration
+This code shows an example series data object:
 
     var flot_options = { ... } // see above for info on plot configuration options
 
