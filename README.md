@@ -19,9 +19,15 @@ Supose you want to plot the two following (fictional and meaningless) data using
     </tr>
   </thead>
   <tbody>
-    <th>0-20</th><th>1000</th><th>900</th>
-    <th>20-40</th><th>300</th><th>1150</th>
-    <th>40+</th><th>200</th><th>1000</th>
+    <tr>
+      <th>0-20</th><td>1000</td><td>900</td>
+    </tr>
+    <tr>
+      <th>20-40</th><td>300</td><td>1150</td>
+    </tr>
+    <tr>
+      <th>40+</th><td>200</td><td>1000</td>
+    </tr>
   </tbody>
 </table>
 
