@@ -15,7 +15,7 @@ Supose you want to plot the two following (fictional and meaningless) data using
 <table>
   <thead>
     <tr>
-      <th>Age group</th><th>Men</th><Women</th>
+      <th>Age group</th><th>Men</th><th><Women</th>
     </tr>
   </thead>
   <tbody>
