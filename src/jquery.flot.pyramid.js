@@ -1,7 +1,16 @@
-var pyramid = (function(){
+var FlotPyramid = (function(){
   var yaxisTicks = [],
       xaxisMin = 10,
-      xaxisMax = 90;
+      xaxisMax = 90,
+      InvalidData = {
+        plugin: 'flot.pyramid',
+        msg: 'Invalid series for pyramid plot! The supplied data must have exactly the same labels!'
+      },
+      InvalidDirection = {
+        plugin: 'flot.pyramid',
+        msg: 'Invalid direction specified for pyramid series. Use \'L\' or \'W\' for left, or \'R\' or \'E\' for right (default is right)'
+      }
+
 
   function computeTicks(data) {
     var i, len;
@@ -31,7 +40,7 @@ var pyramid = (function(){
 
   function checkTicks(data) {
     if (!sameTicksLength(data) || !allTicksPresent(data)) {
-      throw('flot.pyramid: Invalid series for pyramid plot! The supplied data must have exactly the same labels!');
+      throw(InvalidData);
     }
   }
 
@@ -44,7 +53,7 @@ var pyramid = (function(){
     }
   }
 
-  function fixTicks(data) {
+  function fixYaxis(data) {
     if (yaxisTicks.length == 0) {
       computeTicks(data);
     } else {
@@ -55,9 +64,8 @@ var pyramid = (function(){
   }
 
   function xaxisTickFormatter(oldFormatter) {
-
     return function(val, axis) {
-      var n = val < 0 ? -val: val;
+      val = val < 0 ? -val: val;
       return oldFormatter ? oldFormatter(val, axis) : val;
     }
   }
@@ -70,7 +78,7 @@ var pyramid = (function(){
     } else if (direction === 'L') {
       mult = -1;
     } else {
-      throw("flot.pyramid: Invalid direction specified for pyramid series. Use 'L' for left or 'R' for right (default is 'R')");
+      throw(InvalidDirection);
     }
 
     for (var i=0, len = arr.length; i < len; i += 1) {
@@ -97,7 +105,8 @@ var pyramid = (function(){
   }
 
   function processRawData(plot, series, datapoints) {
-    fixTicks(series.data);
+    series.data = $.extend(true, [], series.data);
+    fixYaxis(series.data);
     fixXaxis(plot.getOptions(), series.data);
 
     series.data = formatSeries(series);
@@ -108,15 +117,17 @@ var pyramid = (function(){
       $.extend(options.series.bars, {
         show: true,
         horizontal: true,
-        barWidth: 0.3,
-        align: 'center'
+        align: 'center',
+        barWidth: options.series.pyramid.barWidth || 0.6
       });
 
-      $.extend(options.xaxes[options.series.xaxis - 1 || 0], {
-        tickFormatter: xaxisTickFormatter(options.xaxes[0].tickFormatter)
+      var xaxis = options.xaxes[options.series.xaxis - 1 || 0];
+      $.extend(xaxis, {
+        tickFormatter: xaxisTickFormatter(xaxis.tickFormatter)
       });
 
-      $.extend(options.yaxes[options.series.yaxis - 1 || 0], {
+      var yaxis = options.yaxes[options.series.yaxis - 1 || 0];
+      $.extend(yaxis, {
         ticks: yaxisTicks
       });
 
@@ -129,14 +140,16 @@ var pyramid = (function(){
   }
 
   return {
-    init: init
+    init: init,
+    InvalidDirection: InvalidDirection,
+    InvalidData: InvalidData
   }
 }());
 
 (function ($) {
   $.plot.plugins.push({
-      init: pyramid.init,
+      init: FlotPyramid.init,
       name: "pyramid",
-      version: "0.1"
+      version: "1.0.0"
   });
 })(jQuery);
