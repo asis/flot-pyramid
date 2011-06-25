@@ -1,61 +1,97 @@
+---
+layout: nil
+---
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset='utf-8'>
+  <head>
+    <meta charset='utf-8'/>
 
-  <title>asis/flot-pyramid @ GitHub</title>
+    <title>asis/flot-pyramid @ GitHub</title>
 
-  <style type="text/css">
-    body {
-      margin-top: 1.0em;
-      background-color: #ffffff;
-      font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #000000;
+    <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../excanvas.min.js"></script><![endif]-->
+    <script language="javascript" type="text/javascript" src="js/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="js/jquery.flot.js"></script>
+    <script type="text/javascript" language="javascript" src="js/jquery.flot.pyramid.js"> </script>
+    <script type="text/javascript" language="javascript" src="js/example.js"> </script>
+
+    <link rel="stylesheet" type="text/css" href="/css/base.css" media="screen" charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href="/css/native.css" media="screen" charset="utf-8"/>
+  </head>
+
+  <body>
+    <a href="http://github.com/asis/flot-pyramid"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+
+    <div id="container">
+
+      <div class="download">
+        <a href="http://github.com/asis/flot-pyramid/zipball/master">
+          <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
+        <a href="http://github.com/asis/flot-pyramid/tarball/master">
+          <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
+      </div>
+
+      <h1><a href="http://github.com/asis/flot-pyramid">flot-pyramid</a>
+        <span class="small">by <a href="http://github.com/asis">asis</a></span></h1>
+
+      <div class="description">
+        A population pyramid plugin for flot
+      </div>
+
+      <p><strong>flot.pyramid</strong> is a flot plugin wich can be used to plot population pyramids with ease.</p>
+      <p>You can check the source code on GitHub: <a href="http://github.com/asis/flot-pyramid">asis/flot-pyramid</a></p>
+
+      <h2>Dependencies</h2>
+      <p><a href="http://code.google.com/p/flot/">flot v0.7</a></p>
+
+      <h2>Example</h2>
+
+      <p>
+        This is an example showing the Spanish population pyramid, male vs. female (source: <a href="http://www.census.gov/ipc/www/idb/index.php">U.S. Census Bureau, International Data Base</a>).
+      </p>
+
+      <div id="pyramid" style="width:600px;height:400px;"></div>
+
+      <p>
+        And this is the relevant code:
+      </p>
+
+    {% highlight javascript %}
+var pseries = [
+  {
+  label: 'Men',
+  data: [ ['0-4',1302329], ['5-9',1225196], ['10-14',1090872],
+        ['15-19',1158983], ['20-24',1339972], ['25-29',1667557], ['30-34',2072016],
+        ['35-39',2117802], ['40-44',1945472], ['45-49',1746832], ['50-54',1521581],
+        ['55-59',1282107], ['60-64',1173175], ['65-69',990405], ['70-74',800274],
+        ['75-79',732383], ['80-84',477597], ['85-89',241915], ['90-94',69987],
+        ['95-99',15332], ['100+',2060] ] },
+{
+  label: 'Women',
+  data: [ ['0-4',1224757], ['5-9',1129454], ['10-14',1030163],
+        ['15-19',1084773], ['20-24',1220879], ['25-29',1527463], ['30-34',1960767],
+        ['35-39',2043411], ['40-44',1904849], ['45-49',1747880], ['50-54',1551797],
+        ['55-59',1330712], ['60-64',1262386], ['65-69',1107169], ['70-74',980444],
+        ['75-79',994168], ['80-84',764408], ['85-89',475115], ['90-94',171929],
+        ['95-99', 40284], ['100+',5498] ],
+  pyramid: {
+    direction: 'L'
+  }
+}
+];
+
+$.plot($('#pyramid'), pseries, {
+  series: {
+    pyramid: {
+      show: true
+    },
+  },
+  xaxis: {
+    tickFormatter: function(v) {
+      return v == 0 ? 0 : v/1000 + " K";
     }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-    h1 { font-size: 3.8em; color: #000000; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #000000; }
-    h3 { text-align: center; color: #000000; }
-    a { color: #000000; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-  </style>
-</head>
-
-<body>
-  <a href="http://github.com/asis/flot-pyramid"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
-
-  <div id="container">
-
-    <div class="download">
-      <a href="http://github.com/asis/flot-pyramid/zipball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-      <a href="http://github.com/asis/flot-pyramid/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
-    </div>
-
-    <h1><a href="http://github.com/asis/flot-pyramid">flot-pyramid</a>
-      <span class="small">by <a href="http://github.com/asis">asis</a></span></h1>
-
-    <div class="description">
-      A population pyramid plugin for flot
-    </div>
-
-    <p>flot.pyramid is a flot plugin wich can be used to plot population pyramids with ease.</p><h2>Dependencies</h2>
-<p>flot v0.7 (http://code.google.com/p/flot/)</p>
-<h2>Authors</h2>
-<p>Asís García Chao (asis.garcia@gmail.com)<br/><br/>      </p>
-<h2>Contact</h2>
-<p>Asís García (asis.garcia@gmail.com)<br/>      </p>
-
+  }
+});
+    {% endhighlight %}
 
     <h2>Download</h2>
     <p>
@@ -69,11 +105,17 @@
     </p>
 
     <div class="footer">
+      <p>
       get the source code on GitHub : <a href="http://github.com/asis/flot-pyramid">asis/flot-pyramid</a>
+      </p>
+      <p>
+        <strong>Author & Contact</strong>
+        <br/>
+        Asís García Chao (asis.garcia <em>at</em> gmail)
+      </p>
     </div>
 
   </div>
 
-  
 </body>
 </html>
