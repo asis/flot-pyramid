@@ -12,11 +12,6 @@ var testData = [
   { label: 'W', data: [['0-10', 21], ['10-20', 22], ['20-30', 20], ['30-40', 27],['40+', 30]], pyramid: { direction: 'L' } }
 ];
 
-var testData2 = [
-  { label: 'A', data: [['a', 10], ['b', 12], ['c', 5]], pyramid: { direction: 'L' } },
-  { label: 'B', data: [['a', 6], ['b', 7], ['c', 9]] }
-]
-
 var testOptions = { series: { pyramid: { show: true } } };
 
 var plot, options;
