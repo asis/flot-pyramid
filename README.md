@@ -31,11 +31,15 @@ Supose you want to plot the two following (fictional and meaningless) data using
   </tbody>
 </table>
 
-The `flot.pyramid` plugin will process the data as follows (given we wnat to plot the data showing the bars representing the women values to the left):
+The `flot.pyramid` plugin will process the data as follows (given we want to plot the bars representing women values to the left):
 
-1.  Extract the data labels (`0-20`, `20-40`, and `40+`) and use them as the Y axis tick labels
-2.  Flip the women related data, so `flot` is actually plotting `-900`, `-1150`, and `-1000`
-3.  Add a custom X axis formatter, so the negative values are shown as positive
+1.  Extract the data labels (`0-20`, `20-40`, and `40+`) and use them as
+    the Y axis tick labels
+2.  Add a custom X axis formatter, so the negative values are shown as
+    positive
+3.  Flip the women related data, so `flot` is actually plotting `-900`,
+    `-1150`, and `-1000`. The original series data is left untouched.
+    The "flip" only affects the datapoints used internally by `flot`.
 
 And that's it!
 
