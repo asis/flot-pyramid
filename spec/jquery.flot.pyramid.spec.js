@@ -1,27 +1,4 @@
 describe("flot.pyramid", function() {
-  var testData = [
-    { label: 'M', data: [['0-10', 20], ['10-20', 26], ['20-30', 45], ['30-40', 23],['40+', 10]] },
-    { label: 'W', data: [['0-10', 21], ['10-20', 22], ['20-30', 20], ['30-40', 27],['40+', 30]], pyramid: { direction: 'L' } }
-  ];
-
-  var testOptions = { series: { pyramid: { show: true } } };
-
-  var plot, options;
-  var labels = testData[0].data.map(function(e){return e[0]});
-  var testDataClone = $.extend(true, [], testData);
-
-  function plotData(data, plotOptions, container_id) {
-    container_id = container_id || 'test';
-
-    var container = $('<div id="' + container_id + '" style="width:600px;height:300px;"></div>')
-    container.hide();
-    $('body').append(container);
-
-    plot = $.plot(container, data, plotOptions);
-    options = plot.getOptions();
-
-    return plot;
-  }
 
   it("should register itself as a flot plugin", function() {
     var plugin = jQuery.plot.plugins[0];
@@ -32,6 +9,12 @@ describe("flot.pyramid", function() {
 
   describe("when plotting a pyramid chart", function() {
     beforeEach(function() {
+      this.addMatchers({
+        toBeNegativeOrZero: function() {
+          return this.actual.every(function(v) { return v <= 0; });
+        }
+      });
+
       plotData(testData, testOptions);
     });
 
@@ -67,41 +50,59 @@ describe("flot.pyramid", function() {
       expect(ticks).toBeDefined();
       expect(ticks.toString()).toBe(labels.toString());
     });
-  });
 
-  it("should fail when plotting series with a different number of values", function() {
-    var wrongTestData = $.extend(true, [], testData);
-    wrongTestData[0].data.pop();
+    it("should preserve user defined xaxis formatter", function() {
+      var formatter = {
+        format: function(v, axis) {
+          return v + "!";
+        }
+      };
+      spyOn(formatter, 'format').andCallThrough();
 
-    expect(wrongTestData[0].data.length).toBeLessThan(wrongTestData[1].data.length);
-    expect(function() { plotData(wrongTestData, testOptions, 'fail1') }).toThrow(FlotPyramid.InvalidData);
-  });
+      var customBarOptions = $.extend(true, { xaxis: { tickFormatter: formatter.format } }, testOptions);
+      plotData(testData, customBarOptions, 'bars');
+      expect(formatter.format).toHaveBeenCalled();
+    });
 
-  it("should fail when plotting series with a wrong direction specification", function() {
-    var wrongTestData = $.extend(true, [], testData);
-    wrongTestData[1].pyramid.direction = 'F';
+    it("should preserve user defined bars width", function() {
+      var customBarOptions = $.extend(true, { series: { pyramid: { barWidth: 0.1 } } }, testOptions);
 
-    expect(function() { plotData(wrongTestData, testOptions, 'fail2') }).toThrow(FlotPyramid.InvalidDirection);
-  });
+      var plot = plotData(testData, customBarOptions, 'bars');
+      var options =  plot.getOptions();
+      expect(options.series.bars.barWidth).toBe(0.1);
+    });
 
-  it("should preserve user defined bars width", function() {
-    var customBarOptions = $.extend(true, { series: { pyramid: { barWidth: 0.1 } } }, testOptions);
+    it("should throw FlotPyramid.InvalidData when series have a different number of values", function() {
+      var wrongTestData = $.extend(true, [], testData);
+      wrongTestData[0].data.pop();
 
-    var plot = plotData(testData, customBarOptions, 'bars');
-    var options =  plot.getOptions();
-    expect(options.series.bars.barWidth).toBe(0.1);
-  });
+      expect(wrongTestData[0].data.length).toBeLessThan(wrongTestData[1].data.length);
+      expect(function() { plotData(wrongTestData, testOptions) }).toThrow(FlotPyramid.InvalidData);
+    });
 
-  it("should preserve user defined xaxis formatter", function() {
-    var formatter = {
-      format: function(v, axis) {
+    it("should throw FlotPyramid.InvalidDirection when series have a wrong direction specification", function() {
+      var wrongTestData = $.extend(true, [], testData);
+      wrongTestData[1].pyramid.direction = 'F';
+
+      expect(function() { plotData(wrongTestData, testOptions) }).toThrow(FlotPyramid.InvalidDirection);
+    });
+
+    it("should flip the data series marked with L or W", function() {
+      var data = plot.getData();
+
+      expect(data[1].pyramid.direction).toBe('L');
+
+      // extract the datapoints relevant data OMG
+      var datapoints = data[1].datapoints.points,
+          size = data[1].datapoints.pointsize;
+      var xDatapoints = [];
+
+      for (var i = 0, len = datapoints.length; i < len; i += size) {
+        xDatapoints.push(datapoints[i]);
       }
-    };
-    spyOn(formatter, 'format').andCallThrough();
 
-    var customBarOptions = $.extend(true, { xaxis: { tickFormatter: formatter.format } }, testOptions);
-    plotData(testData, customBarOptions, 'bars');
-    expect(formatter.format).toHaveBeenCalled();
+      expect(xDatapoints).toBeNegativeOrZero();
+    });
   });
 });
 

@@ -70,26 +70,20 @@ var FlotPyramid = (function(){
     }
   }
 
-  function formatSeries(series) {
-    var tmp = [], arr = series.data, direction = series.pyramid.direction || 'R', mult;
+  function checkSeriesDirection(series) {
+    var direction = series.pyramid.direction;
 
-    if (direction === 'R') {
-      mult = 1;
-    } else if (direction === 'L') {
-      mult = -1;
-    } else {
+    if (direction && !direction.match(/L|W|R|E/)) {
       throw(InvalidDirection);
     }
-
-    for (var i=0, len = arr.length; i < len; i += 1) {
-      tmp.push([arr[i][1] * mult, arr[i][0]]);
-    }
-    return tmp;
   }
 
-  function fixXaxis(options, data) {
+  function fixXaxis(options, series) {
     var max,
-        currentMax = options.xaxes[0].max || 0;
+        currentMax = options.xaxes[0].max || 0,
+        data = series.data;
+
+    checkSeriesDirection(series);
 
     function reduce(data, f) {
       return data.reduce(function(prev, current, index, array) {
@@ -107,9 +101,20 @@ var FlotPyramid = (function(){
   function processRawData(plot, series, datapoints) {
     series.data = $.extend(true, [], series.data);
     fixYaxis(series.data);
-    fixXaxis(plot.getOptions(), series.data);
+    fixXaxis(plot.getOptions(), series);
+  }
 
-    series.data = formatSeries(series);
+  function processDatapoints(plot, series, datapoints) {
+    var swapped = [],
+      points = datapoints.points,
+      mult = (series.pyramid.direction || 'R').match(/L|W/) ? -1 : 1;
+    for(var i = 0, len = points.length; i < len; i += datapoints.format.length) {
+      swapped.push(points[i+1] * mult);
+      swapped.push(points[i]);
+      swapped.push(points[i+2]);
+    }
+
+    datapoints.points = swapped;
   }
 
   function processOptions(plot, options) {
@@ -132,6 +137,7 @@ var FlotPyramid = (function(){
       });
 
       plot.hooks.processRawData.push(processRawData);
+      plot.hooks.processDatapoints.push(processDatapoints);
     }
   }
 
