@@ -39,6 +39,45 @@ $(function () {
           tickFormatter: function(v) {
             return v/1000 + " K";
           }
+        },
+        grid: {
+            hoverable: true
+        },
+    });
+
+    function showTooltip(x, y, contents) {
+        $('<div id="tooltip">' + contents + "</div>").css({
+          position: "absolute",
+          display: "none",
+          top: y + 5,
+          left: x + 5,
+          border: "1px solid #fdd",
+          padding: "2px",
+          "background-color": "#fee",
+          opacity: .8
+        }).appendTo("body").fadeIn(200);
+    }
+
+    var previousPoint = null,
+        previousSeries = null;
+
+    $('#pyramid').bind('plothover', function(event, pos, item) {
+        $("#x").text(pos.x.toFixed(2));
+        $("#y").text(pos.y.toFixed(2));
+
+        if (item) {
+            if (previousPoint != item.dataIndex || previousSeries != item.series) {
+                previousPoint = item.dataIndex;
+                previousSeries = item.series;
+                $("#tooltip").remove();
+                var data = item.series.data[item.dataIndex];
+                var x = data[1];
+                var group = item.series.yaxis.ticks[data[0]].label;
+                showTooltip(item.pageX, item.pageY, item.series.label + " with age in " + group + " = " + x);
+            }
+        } else {
+            $("#tooltip").remove();
+            previousPoint = null;
         }
     });
 });
