@@ -6,7 +6,7 @@
 // Ok, let's wrap everything in a warm, secure closure.
 var FlotPyramid = (function(){
 
-  // ## Some declarations
+  // Some declarations follow:
 
   // The yaxis tick values will be stored in here.
   var yaxisTicks = [],
@@ -223,7 +223,9 @@ var FlotPyramid = (function(){
     }
   }
 
-// Finally, expose only the minimum stuff, i.e.
+// ## Wrap it up!
+
+// Expose only the minimum stuff, i.e.
   return {
 // The init function...
     init: init,
