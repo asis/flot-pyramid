@@ -18,6 +18,14 @@ describe("flot.pyramid", function() {
       plotData(testData, testOptions);
     });
 
+    it("should not fail when plotting two different data sets", function() {
+      var testData2 = [
+        { label: 'L1', data: [['A', 10], ['B', 20]] },
+        { label: 'L2', data: [['A', 20], ['B', 30]], pyramid: { direction: 'L' } }
+      ];
+      plotData(testData2, testOptions);
+    });
+
     it("should add bars config to the global plot options", function() {
       expect(options.series.bars).toBeDefined();
       expect(options.series.bars.horizontal).toBeTruthy();

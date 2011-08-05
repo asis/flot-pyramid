@@ -8,12 +8,9 @@ var FlotPyramid = (function(){
 
   // Some declarations follow:
 
-  // The yaxis tick values will be stored in here.
-  var yaxisTicks = [],
-
   // An object which will be thrown when the data to plot
   // is invalid.
-  InvalidData = {
+  var InvalidData = {
     plugin: 'flot.pyramid',
     msg: 'Invalid series for pyramid plot! The supplied data must have exactly the same labels!'
   },
@@ -35,6 +32,8 @@ var FlotPyramid = (function(){
 
   // Processes the plot options.
   function processOptions(plot, options) {
+    plot.pyramidYaxisTicks = [];
+
     // When the pyramid plugin is active (i.e. shown)
     if (options.series.pyramid && options.series.pyramid.show) {
       // Configure _flot_ options in order to plot the data using _bars_,
@@ -59,7 +58,7 @@ var FlotPyramid = (function(){
 
       // Use custom Y axis ticks.
       $.extend(yaxis, {
-        ticks: yaxisTicks
+        ticks: plot.pyramidYaxisTicks
       });
 
       // Register the pyramid raw data processor...
@@ -75,7 +74,7 @@ var FlotPyramid = (function(){
     // to preserve the original data, a deep clone is made
     series.data = $.extend(true, [], series.data);
     // Now the Y axis can be fixed using the series data.
-    fixYaxis(series.data);
+    fixYaxis(series.data, plot.pyramidYaxisTicks);
     // And also the X axis.
     fixXaxis(plot.getOptions(), series);
   }
@@ -157,18 +156,18 @@ var FlotPyramid = (function(){
   // ## Y axis formatting
 
   // Fixes the Y axis values in the data and fixes the Y axis ticks values.
-  function fixYaxis(data) {
+  function fixYaxis(data, yaxisTicks) {
     // If this is the first series to be processed (and therefore the
     // _yaxisTicks_ array is empty)
     if (yaxisTicks.length == 0) {
       // use it to extract the tick values. All the data labels (which will be
       // used as tick values) in all the plotted series must be exactly the
       // same,
-      extractTicks(data);
+      extractTicks(data, yaxisTicks);
     } else {
       // so, if the data labels have already been extracted, every other
       // series' data is checked.
-      checkTicks(data);
+      checkTicks(data, yaxisTicks);
     }
 
     // Once extracted (or checked) the labels, the data can be rewritten in
@@ -177,7 +176,7 @@ var FlotPyramid = (function(){
   }
 
   // Extracts the Y axis ticks given the data to be plotted,
-  function extractTicks(data) {
+  function extractTicks(data, yaxisTicks) {
     var i, len;
     for(i = 0, len = data.length; i < len; i += 1) {
       // extracting the data label and building an array in the form _[[1,
@@ -187,10 +186,10 @@ var FlotPyramid = (function(){
   }
 
   // Checks whether the given data is "well formed",
-  function checkTicks(data) {
+  function checkTicks(data, yaxisTicks) {
     // i.e. it has so many data values as Y axis ticks, and every data value is
     // labeled with a label which is present in the Y axis ticks (labels) array. Wow.
-    if (!sameTicksLength(data) || !allTicksPresent(data)) {
+    if (!sameTicksLength(data, yaxisTicks) || !allTicksPresent(data, yaxisTicks)) {
       // Oh, if something is wrong with the data, just throw _InvalidData_.
       throw(InvalidData);
     }
@@ -198,13 +197,13 @@ var FlotPyramid = (function(){
 
   // Checks whether the given data has the same length as the Y axis extracted
   // ticks array.
-  function sameTicksLength(data) {
+  function sameTicksLength(data, yaxisTicks) {
     return yaxisTicks.length == data.length;
   }
 
   // Checks whether every tick in the Y axis has a corresponding labeled data
   // entry in the _data_ array.
-  function allTicksPresent(data) {
+  function allTicksPresent(data, yaxisTicks) {
     var labels, expected_labels;
 
     // Get the actual and expected labels
