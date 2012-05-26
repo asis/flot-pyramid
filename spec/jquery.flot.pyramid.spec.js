@@ -112,5 +112,23 @@ describe("flot.pyramid", function() {
       expect(xDatapoints).toBeNegativeOrZero();
     });
   });
+
+  describe('when plotting stacked data', function() {
+
+    var testStackedData = [
+      { label: 'L1', data: [['a', 1], ['b', 2]], pyramid: { direction: 'L' }  },
+      { label: 'L2', data: [['a', 3], ['b', 4]], pyramid: { direction: 'L' }  },
+      { label: 'R1', data: [['a', 5], ['b', 6]], pyramid: { direction: 'R' } },
+      { label: 'R2', data: [['a', 7], ['b', 8]], pyramid: { direction: 'R' } }
+    ];
+    beforeEach(function() {
+      plotData(testStackedData, { series: { pyramid: { show: true, stacked: true } } });
+    });
+
+    it('should stack the values in the same direction', function() {
+      // TODO: test this one!
+      // how it is supossed to be tested
+    });
+  });
 });
 
