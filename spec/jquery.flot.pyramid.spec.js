@@ -126,8 +126,24 @@ describe("flot.pyramid", function() {
     });
 
     it('should stack the values in the same direction', function() {
-      // TODO: test this one!
-      // how it is supossed to be tested
+      var data = plot.getData(),
+          expectedDatapoints = [
+            [-1,0,0,-2,1,0],
+            [-4,0,-1,-6,1,-2],
+            [5,0,0,6,1,0],
+            [12,0,5,14,1,6]
+          ],
+          datapoints,
+          size,
+          i,
+          l = expectedDatapoints.length;
+
+      for(i =  0; i < l; i++) {
+        datapoints = data[i].datapoints.points;
+
+        expect(datapoints).toEqual(expectedDatapoints[i]);
+      }
+
     });
   });
 });
