@@ -244,6 +244,6 @@ var FlotPyramid = (function(){
   $.plot.plugins.push({
       init: FlotPyramid.init,
       name: "pyramid",
-      version: "1.0.1"
+      version: "1.0.2"
   });
 })(jQuery);
