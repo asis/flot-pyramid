@@ -86,7 +86,7 @@ var FlotPyramid = (function(){
       // Calculate the _multiplier_ factor given the data plot direction
       // (_left_ or _west_ values must be drawn towards the negative part of
       // the X axis)
-      mult = (series.pyramid.direction || 'R').match(/L|W/) ? -1 : 1;
+      mult = (series.pyramid.direction || 'R').match(/L|W/) ? -1 : 1;
 
     // For each data point, originally in the form _(X,Y,whatever)_, swap the X
     // and Y axis values, giving the X value the right direction using the
