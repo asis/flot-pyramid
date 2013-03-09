@@ -132,17 +132,12 @@ var FlotPyramid = (function(){
     }
 
     // Get the maximum value in the series data.
-    // values = data.map(function(d){return d[1]});
-    // this don't work on IE 8 so I replace 
     values = jQuery.map(data,function(d){return d[1]});
-    
 
-    // max = reduce(values, Math.max);
-    // and reduce i just change to get the max value    
-    max = values[0];    
+
+    max = values[0];
     for (i=0 ; i<values.length;i++) {if(values[i]>max) { max= values[i] };}
-    
-    
+
 
     // Compare the maximum value to the global maximum for the axis.
     // TODO: replace that 0 with the relevant axis index
